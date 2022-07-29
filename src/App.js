@@ -1,30 +1,43 @@
-// import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css';
 import { Bar } from '@nivo/bar'
-import data from './data.js'
 
 function App() {
-  // const [dat, setData] = useState(null)
-  // const url = 'https://api.punkapi.com/v2/beers'
+  const [data, setData] = useState([])
+  const url = 'https://api.punkapi.com/v2/beers'
 
-  // useEffect(() => {
-  //   fetch(url)
-  //     .then(res => res.json())
-  //     .then(json => {
-  //       console.log(json)    
-  // })
-  // },[])
-
+  useEffect(() => {
+    fetch(url)
+      .then(res => res.json())
+      .then(json => {  
+        setData(json)
+  })
+  },[])
+console.log("hi", data)
   return (
 
     <div className="App">
+
+      <nav>
+        
+        <input type="date"></input>
+        <input type="date"></input>
+
+        <input type="text"></input>
+      </nav>
   
+
+
+
+
+
       <Bar
-        width={500}
-        height={400}
+        width={1300}
+        height={600}
         data={data}
-        keys={["degress"]}
-        indexBy="day"
+        maxValue={"auto"}
+        keys={["abv"]}
+        indexBy="first_brewed"
         margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
         padding={0.4}
         valueScale={{ type: "linear" }}
@@ -37,7 +50,7 @@ function App() {
           tickSize: 5,
           tickPadding: 5,
           tickRotation: 0,
-          legend: "degrees",
+          legend: "abv",
           legendPosition: "middle",
           legendOffset: -40
         }}
