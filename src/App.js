@@ -4,15 +4,31 @@ import { Bar } from '@nivo/bar'
 
 function App() {
   const [data, setData] = useState([])
-  const [maxabv, setMaxabv] = useState([])
-  const url = 'https://api.punkapi.com/v2/beers'
+
   const [formData, setFormData] = useState(
     {
-      brewed_before: "",
-      brewed_after: "",
-      abv: "",
+      brewed_before: '',
+      brewed_after: '',
+      abv: '',
     }
   )
+
+  const sliceDay = (date) => {
+    if (date !== '') {
+      const year = date.substring(0, 4)
+      const month = date.substring(5, 7)
+      return month + '-' + year
+    }
+  }
+
+  let url = `https://api.punkapi.com/v2/beers?`
+  if (formData.brewed_after !== '' && formData.brewed_before !== '') {
+    url = url + `brewed_after=${sliceDay(formData.brewed_after)}&brewed_before=${sliceDay(formData.brewed_before)}&`
+  }
+
+  if (formData.abv !== '') {
+    url = url + `abv_gt=${formData.abv - 1}&abv_lt=${formData.abv + 1}&`
+  }
 
   useEffect(() => {
     fetch(url)
@@ -20,7 +36,10 @@ function App() {
       .then(json => {
         setData(json)
       })
-  }, [])
+
+  }, [url])
+
+  console.log('barry', url)
 
   const handleChange = (event) => {
     setFormData(prevFormData => {
@@ -29,10 +48,15 @@ function App() {
         [event.target.name]: event.target.value
       }
     })
-
   }
 
-  console.log("hi", formData)
+  const findMaxabv = () => {
+    const maxAbv = data.map(beerItem => beerItem.abv)
+    return (Math.max(...maxAbv))
+  }
+
+
+  console.log(data)
   return (
 
     <div className="App">
@@ -42,6 +66,7 @@ function App() {
         <br />
         <input
           type="date"
+          pattern="\d{4}-\d{2}-\d{2}"
           id="brewed_before"
           name="brewed_before"
           value={formData.brewed_before}
@@ -52,6 +77,7 @@ function App() {
         <br />
         <input
           type="date"
+          pattern="\d{4}-\d{2}-\d{2}"
           id="brewed_after"
           name="brewed_after"
           value={formData.brewed_after}
@@ -59,21 +85,19 @@ function App() {
         />
 
         <br />
+        <label htmlFor="abv">Filter by abv<br/>{formData.abv}</label>
+        <br />
         <input
           type="range"
           name="abv"
+          id="abv"
           min='0'
-          max='25'
-          step='0.1'
+          max={findMaxabv()}
+          step='1'
           value={formData.abv}
           onChange={handleChange}
         ></input>
       </nav>
-
-
-
-
-
 
       <Bar
         width={1300}
