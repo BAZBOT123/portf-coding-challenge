@@ -4,28 +4,72 @@ import { Bar } from '@nivo/bar'
 
 function App() {
   const [data, setData] = useState([])
+  const [maxabv, setMaxabv] = useState([])
   const url = 'https://api.punkapi.com/v2/beers'
+  const [formData, setFormData] = useState(
+    {
+      brewed_before: "",
+      brewed_after: "",
+      abv: "",
+    }
+  )
 
   useEffect(() => {
     fetch(url)
       .then(res => res.json())
-      .then(json => {  
+      .then(json => {
         setData(json)
-  })
-  },[])
-console.log("hi", data)
+      })
+  }, [])
+
+  const handleChange = (event) => {
+    setFormData(prevFormData => {
+      return {
+        ...prevFormData,
+        [event.target.name]: event.target.value
+      }
+    })
+
+  }
+
+  console.log("hi", formData)
   return (
 
     <div className="App">
 
       <nav>
-        
-        <input type="date"></input>
-        <input type="date"></input>
+        <label htmlFor="brewed_before">brewed before</label>
+        <br />
+        <input
+          type="date"
+          id="brewed_before"
+          name="brewed_before"
+          value={formData.brewed_before}
+          onChange={handleChange}
+        />
+        <br />
+        <label htmlFor="brewed_after">brewed after</label>
+        <br />
+        <input
+          type="date"
+          id="brewed_after"
+          name="brewed_after"
+          value={formData.brewed_after}
+          onChange={handleChange}
+        />
 
-        <input type="text"></input>
+        <br />
+        <input
+          type="range"
+          name="abv"
+          min='0'
+          max='25'
+          step='0.1'
+          value={formData.abv}
+          onChange={handleChange}
+        ></input>
       </nav>
-  
+
 
 
 
@@ -55,7 +99,7 @@ console.log("hi", data)
           legendOffset: -40
         }}
       />
-      </div>
+    </div>
   );
 }
 
