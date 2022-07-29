@@ -36,7 +36,6 @@ function App() {
       .then(json => {
         setData(json)
       })
-
   }, [url])
 
   console.log('barry', url)
@@ -56,11 +55,9 @@ function App() {
   }
 
 
-  console.log(data)
+
   return (
-
     <div className="App">
-
       <nav>
         <label htmlFor="brewed_before">brewed before</label>
         <br />
@@ -72,6 +69,7 @@ function App() {
           value={formData.brewed_before}
           onChange={handleChange}
         />
+        
         <br />
         <label htmlFor="brewed_after">brewed after</label>
         <br />
@@ -85,7 +83,7 @@ function App() {
         />
 
         <br />
-        <label htmlFor="abv">Filter by abv<br/>{formData.abv}</label>
+        <label htmlFor="abv">Filter by abv<br />{formData.abv}</label>
         <br />
         <input
           type="range"
